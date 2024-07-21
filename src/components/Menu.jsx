@@ -1,8 +1,7 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Separator } from "./ui/separator";
 import { useNavigate } from "react-router-dom";
 import {
-  BookmarkCheck,
   CloudUpload,
   FileText,
   LayoutDashboard,
@@ -11,6 +10,12 @@ import {
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { authContext } from "@/App";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -71,15 +76,43 @@ const Menu = () => {
         </div>
       </div>
       <div className="text-primary-foreground m-4">
-        <p
-          className="text-primary-foreground text-lg cursor-pointer flex items-center gap-2 m-4"
-          onClick={() => {
-            setIsLoggedIn(false);
-            navigate("/login");
-          }}
-        >
-          <LogOut /> Logout
-        </p>
+        <Popover >
+          <PopoverTrigger>
+            <p
+              className="text-primary-foreground text-lg cursor-pointer flex items-center gap-2 m-4"
+              onClick={() => {
+                // setIsLoggedIn(false);
+                // navigate("/login");
+              }}
+            >
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </p>
+          </PopoverTrigger>
+          <PopoverContent className="bg-primary h-fit min-h-fit max-h-fit p-0 m-0 w-fit ml-10 rounded-lg">
+            <p
+              className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit  items-center gap-2 hover:bg-hover "
+              onClick={() => {
+                setIsLoggedIn(false);
+                navigate("/login");
+              }}
+            >
+              <LogOut /> Logout
+            </p>
+            <Separator />
+            <p
+              className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit  items-center gap-2 hover:bg-hover "
+              onClick={() => {
+                // setIsLoggedIn(false);
+                // navigate("/login");
+              }}
+            >
+              Admin Name
+            </p>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
