@@ -4,9 +4,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label, Pie, PieChart } from "recharts";
-import { assignedEmployees, notAssignedEmployees } from "@/services/Api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label, Legend, Pie, PieChart } from "recharts";
+import { assignedEmployees } from "@/services/Api";
 import { Skeleton } from "./ui/skeleton";
 
 function SkeletonComponent() {
@@ -24,7 +24,7 @@ function SkeletonComponent() {
 
 const EmployeeChart = () => {
   const chartConfig = {
-    visitors: {
+    employees: {
       label: "Employees",
     },
     assigned: {
@@ -42,33 +42,50 @@ const EmployeeChart = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       try {
         const assignedResponse = await assignedEmployees();
-        setAssigned(assignedResponse.data[0].assigned_to);
-        const notAssignedResponse = await notAssignedEmployees();
-        const val = notAssignedResponse.data[0].not_assigned_to;
-        setNotAssigned(val);
+        if (isMounted) {
+          setAssigned(assignedResponse.data.Assigned);
+          setNotAssigned(assignedResponse.data.NotAssigned);
+        }
       } catch (error) {
-        console.error(error);
+        if (isMounted) {
+          console.error("Error fetching data:", error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
+
     fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const chartData = [
-    { status: "Assigned", visitors: assigned, fill: "var(--color-assigned)" },
-    {
-      status: "Not Assigned",
-      visitors: notAssigned,
-      fill: "var(--color-notAssigned)",
-    },
-  ];
+  const chartData = React.useMemo(
+    () => [
+      {
+        status: "Assigned",
+        employees: assigned,
+        fill: "var(--color-assigned)",
+      },
+      {
+        status: "Not Assigned",
+        employees: notAssigned,
+        fill: "var(--color-notAssigned)",
+      },
+    ],
+    [assigned, notAssigned]
+  );
 
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+  const totalEmployees = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.employees, 0);
   }, [chartData]);
 
   return (
@@ -91,9 +108,16 @@ const EmployeeChart = () => {
                   cursor={false}
                   content={<ChartTooltipContent hideLabel />}
                 />
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
+                  formatter={(value) => (
+                    <span style={{ color: "#000" }}>{value}</span>
+                  )}
+                />
                 <Pie
                   data={chartData}
-                  dataKey="visitors"
+                  dataKey="employees"
                   nameKey="status"
                   innerRadius={60}
                   strokeWidth={5}
@@ -113,7 +137,7 @@ const EmployeeChart = () => {
                               y={viewBox.cy}
                               className="fill-foreground text-3xl font-bold"
                             >
-                              {totalVisitors.toLocaleString()}
+                              {totalEmployees.toLocaleString()}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
@@ -125,6 +149,7 @@ const EmployeeChart = () => {
                           </text>
                         );
                       }
+                      return null;
                     }}
                   />
                 </Pie>

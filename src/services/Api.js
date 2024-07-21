@@ -1,32 +1,56 @@
 import axios from "axios";
 
-const baseUrl = `http://172.17.15.226:3004`;
+const baseUrl = `http://localhost:3000`;
+const remoteUrl = `http://172.17.15.208:3000`;
 
+// Function to handle login
 export async function login(obj) {
-  let response = await axios.post(`${baseUrl}/login`, obj);
-  return response.data.success;
+  try {
+    const response = await axios.post(`${baseUrl}/login`, obj);
+    return response.data.success;
+  } catch (error) {
+    console.error("Login error:", error);
+    return false;
+  }
 }
 
+// Function to get employees
 export function getEmployees() {
   return axios.get(`${baseUrl}/employees/get-employees`);
 }
 
-export function notAssignedEmployees(){
-  return axios.get(`${baseUrl}/empnotcount/get-employees-notcount`)
+// Function to get count of assigned employees
+export function assignedEmployees() {
+  return axios.get(`${baseUrl}/employees/assigned-count`);
 }
 
-export function assignedEmployees(){
-  return axios.get(`${baseUrl}/empcount/get-employees-count`)
+// Function to upload a document
+export async function uploadDocument(file) {
+  try {
+    const response = await axios.post(`${remoteUrl}/upload`, file);
+    return response;
+  } catch (error) {
+    console.error("Upload error:", error);
+    throw error;
+  }
 }
 
+export async function getProjectTaskStatus(){
+  try{
+    const response = await axios.get(`${baseUrl}/tasks/get-task-status`)
+    return response;
+  }
+  catch(error){
+    console.error(" Can't get projects"+error);
+    throw error;
+  }
+}
 
-// export function uploadDocument(file){
-//   let response =  axios.post(`http://172.17.15.208:3000/upload`, file )
-//   console.log(response);
-//   return response;
-// }
-
+// Exporting API object with all the calls
 export const API = {
-  sendDocument: (file) => axios.post(`http://172.17.15.208:3000/upload`, file),
+  login: (obj) => login(obj),
+  getEmployees: () => getEmployees(),
+  assignedEmployees: () => assignedEmployees(),
+  sendDocument: (file) => uploadDocument(file),
+  getProjectTaskStatus: () => getProjectTaskStatus()  
 };
-

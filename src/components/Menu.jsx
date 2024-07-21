@@ -76,7 +76,7 @@ const Menu = () => {
         </div>
       </div>
       <div className="text-primary-foreground m-4">
-        <Popover >
+        <Popover>
           <PopoverTrigger>
             <p
               className="text-primary-foreground text-lg cursor-pointer flex items-center gap-2 m-4"
@@ -89,6 +89,7 @@ const Menu = () => {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
+              Username
             </p>
           </PopoverTrigger>
           <PopoverContent className="bg-primary h-fit min-h-fit max-h-fit p-0 m-0 w-fit ml-10 rounded-lg">
