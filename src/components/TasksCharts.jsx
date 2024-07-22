@@ -1,30 +1,42 @@
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
-  ChartLegendContent,
+  ChartLegendContent
 } from "@/components/ui/chart";
 import API from "@/services/Api";
 
 const chartConfig = {
   completed: {
     label: "Completed",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-1))"
   },
   inprogress: {
     label: "In progress",
-    color: "hsl(var(--chart-2))",
-  },
+    color: "hsl(var(--chart-2))"
+  }
+};
+
+const CustomXAxis = ({
+  dataKey = "project",
+  tickLine = false,
+  tickMargin = 10,
+  axisLine = false,
+  tickFormatter = (value) => value.slice(0, 15)
+}) => {
+  return (
+    <XAxis
+      dataKey={dataKey}
+      tickLine={tickLine}
+      tickMargin={tickMargin}
+      axisLine={axisLine}
+      tickFormatter={tickFormatter}
+    />
+  );
 };
 
 const TasksCharts = () => {
@@ -35,10 +47,10 @@ const TasksCharts = () => {
     const fetchData = async () => {
       try {
         const response = await API.getProjectTaskStatus();
-        const formattedData = response.data.map((project) => ({
+        const formattedData = response.data.map(project => ({
           project: project.project_name,
           completed: project.completed_count,
-          inprogress: project.inprogress_count,
+          inprogress: project.inprogress_count
         }));
         setChartData(formattedData);
       } catch (error) {
@@ -53,52 +65,39 @@ const TasksCharts = () => {
 
   return (
     <div>
-      <Card className="h-[300px]">
-        <CardHeader>
-          <CardTitle>Tasks Status by each project</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <ChartContainer config={chartConfig}>
-              <BarChart
-                accessibilityLayer
-                data={chartData}
-                width={500}
-                height={0}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="project"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 15)}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="dashed" />}
-                />
-                <ChartLegend content={<ChartLegendContent />} />
-                <Bar
-                  dataKey="completed"
-                  fill="var(--color-completed)"
-                  radius={4}
-                  height={100}
-                />
-                <Bar
-                  dataKey="inprogress"
-                  fill="var(--color-inprogress)"
-                  radius={4}
-                  barSize={50}
-                />
-              </BarChart>
-            </ChartContainer>
-          )}
-        </CardContent>
-      </Card>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Tasks Status by each project</CardTitle>
+            <CardDescription>January - June 2024</CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <div className="h-500">
+              <ChartContainer config={chartConfig}>
+                <BarChart accessibilityLayer data={chartData} width={800} height={600}>
+                  <CartesianGrid vertical={false} />
+                  <CustomXAxis />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dashed" />}
+                  />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar dataKey="completed" fill="var(--color-completed)" radius={4} barSize={40} />
+                  <Bar
+                    dataKey="inprogress"
+                    fill="var(--color-inprogress)"
+                    radius={4}
+                    barSize={40}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

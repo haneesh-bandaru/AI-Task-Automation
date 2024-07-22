@@ -1,30 +1,45 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./screens/Layouts/Layout";
 import UploadDocument from "./screens/UploadDocument";
 import ViewReport from "./screens/ViewReport";
 import Dashboard from "./screens/Dashboard";
 import TaskScreen from "./screens/Task";
 import Login from "./screens/Login";
-import { createContext, useState } from "react";
+import { useEffect, useState } from "react";
 
-export const authContext = createContext();
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
 
   return (
     <div className="flex">
-      <authContext.Provider value={[isLoggedIn, setIsLoggedIn]}>
-        <Layout>
-          <Routes>
-            <Route path="/login" element={<Login />} />
+      <Routes>
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        {isLoggedIn ? (
+          <Route path="/" element={<Layout onLogout={handleLogout} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/upload-document" element={<UploadDocument />} />
             <Route path="/report" element={<ViewReport />} />
             <Route path="/assign-tasks" element={<TaskScreen />} />
-          </Routes>
-        </Layout>
-      </authContext.Provider>
+          </Route>
+        ) : (
+          <Route path="*" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        )}
+      </Routes>
     </div>
   );
 }

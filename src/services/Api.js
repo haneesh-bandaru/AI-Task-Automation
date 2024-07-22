@@ -3,12 +3,10 @@ import axios from "axios";
 const BASE_URL = "http://localhost:3000";
 const REMOTE_URL = "http://172.17.15.208:3000";
 
-// Function to retrieve the token from storage or any method you are using to store it
 function getToken() {
   return localStorage.getItem("token");
 }
 
-// Create an Axios instance with default headers
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {

@@ -1,28 +1,18 @@
-import { authContext } from "@/App";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import API from "@/services/Api";
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [isLoggedIn, setIsLoggedIn] = useContext(authContext);
+const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     try {
       const response = await API.login(data);
-      console.log(response.data);
       localStorage.setItem("token", response.data.token);
       setIsLoggedIn(true);
       navigate("/dashboard");

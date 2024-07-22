@@ -1,53 +1,38 @@
-import { useContext, useState } from "react";
 import { Separator } from "./ui/separator";
 import { useNavigate } from "react-router-dom";
-import {
-  CloudUpload,
-  FileText,
-  LayoutDashboard,
-  LogOut,
-  UserPlus,
-} from "lucide-react";
+import { CloudUpload, FileText, LayoutDashboard, LogOut, UserPlus } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { authContext } from "@/App";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-const Menu = () => {
+const Menu = ({ onLogout }) => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useContext(authContext);
-  const [selectedItem, setSelectedItem] = useState(null);
-  let location = useLocation();
+  const location = useLocation();
 
   const admin = [
     {
       displayName: "Dashboard",
       routeName: "/dashboard",
-      iconName: <LayoutDashboard />,
+      iconName: <LayoutDashboard />
     },
     {
       displayName: "Upload Document",
       routeName: "/upload-document",
-      iconName: <CloudUpload />,
+      iconName: <CloudUpload />
     },
     {
       displayName: "Project Reports",
       routeName: "/report",
-      iconName: <FileText />,
+      iconName: <FileText />
     },
     {
       displayName: "Assigned Tasks",
       routeName: "/assign-tasks",
-      iconName: <UserPlus />,
-    },
+      iconName: <UserPlus />
+    }
   ];
 
-  const handleItemClick = (routeName, index) => {
-    setSelectedItem(index);
+  const handleItemClick = routeName => {
     navigate(routeName);
   };
 
@@ -64,7 +49,7 @@ const Menu = () => {
               key={index}
               className={`ml-4 p-2 cursor-pointer flex gap-2 rounded-lg hover:bg-hover ${
                 location.pathname === item.routeName
-                  ? "bg-white text-primary hover:bg-white "
+                  ? "bg-white text-primary hover:bg-white"
                   : "hover:bg-primary/90"
               }`}
               onClick={() => handleItemClick(item.routeName, index)}
@@ -78,13 +63,7 @@ const Menu = () => {
       <div className="text-primary-foreground m-4">
         <Popover>
           <PopoverTrigger>
-            <p
-              className="text-primary-foreground text-lg cursor-pointer flex items-center gap-2 m-4"
-              onClick={() => {
-                // setIsLoggedIn(false);
-                // navigate("/login");
-              }}
-            >
+            <p className="text-primary-foreground text-lg cursor-pointer flex items-center gap-2 m-4">
               <Avatar>
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
@@ -94,22 +73,13 @@ const Menu = () => {
           </PopoverTrigger>
           <PopoverContent className="bg-primary h-fit min-h-fit max-h-fit p-0 m-0 w-fit ml-10 rounded-lg">
             <p
-              className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit  items-center gap-2 hover:bg-hover "
-              onClick={() => {
-                setIsLoggedIn(false);
-                navigate("/login");
-              }}
+              className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit items-center gap-2 hover:bg-hover"
+              onClick={onLogout}
             >
               <LogOut /> Logout
             </p>
             <Separator />
-            <p
-              className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit  items-center gap-2 hover:bg-hover "
-              onClick={() => {
-                // setIsLoggedIn(false);
-                // navigate("/login");
-              }}
-            >
+            <p className="text-primary-foreground text-lg cursor-pointer p-2 rounded-lg flex h-fit items-center gap-2 hover:bg-hover">
               Admin Name
             </p>
           </PopoverContent>

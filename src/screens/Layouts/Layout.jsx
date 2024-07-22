@@ -1,14 +1,11 @@
-import { authContext } from "@/App";
 import Menu from "@/components/Menu";
-import React, { useContext, useState } from "react";
+import { Outlet } from "react-router-dom";
 
-const AdminLayout = ({ children }) => {
-
-const [isLoggedIn,setIsLoggedIn] = useContext(authContext);
+const AdminLayout = ({onLogout}) => {
   return (
     <div className="h-screen w-screen flex">
-      {isLoggedIn && <Menu />}
-      {children}
+      <Menu onLogout={onLogout}/>
+      <Outlet />
     </div>
   );
 };

@@ -14,7 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import React from "react";
 
 const ViewReport = () => {
   const ProjectData = [
