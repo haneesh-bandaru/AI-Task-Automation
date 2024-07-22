@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { API } from "@/services/Api";
+import API from "@/services/Api";
 
 const UploadDocument = () => {
   const [formResponse, setFormResponse] = useState(null);
@@ -155,8 +155,8 @@ const UploadDocument = () => {
         </form>
       </div>
       {isLoading && (
-        <div class="flex items-center justify-center h-50">
-          <div class="w-10 h-10 border-4 border-primary border-t-white rounded-full animate-spin"></div>
+        <div className="flex items-center justify-center h-50">
+          <div className="w-10 h-10 border-4 border-primary border-t-white rounded-full animate-spin"></div>
         </div>
       )}
       {!isLoading && formResponse && (

@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label, Legend, Pie, PieChart } from "recharts";
-import { assignedEmployees } from "@/services/Api";
 import { Skeleton } from "./ui/skeleton";
+import API from "@/services/Api";
 
 function SkeletonComponent() {
   return (
@@ -45,7 +45,7 @@ const EmployeeChart = () => {
     let isMounted = true;
     const fetchData = async () => {
       try {
-        const assignedResponse = await assignedEmployees();
+        const assignedResponse = await API.assignedEmployees();
         if (isMounted) {
           setAssigned(assignedResponse.data.Assigned);
           setNotAssigned(assignedResponse.data.NotAssigned);

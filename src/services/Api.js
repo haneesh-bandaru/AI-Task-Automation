@@ -1,56 +1,35 @@
 import axios from "axios";
 
-const baseUrl = `http://localhost:3000`;
-const remoteUrl = `http://172.17.15.208:3000`;
+const BASE_URL = "http://localhost:3000";
+const REMOTE_URL = "http://172.17.15.208:3000";
 
-// Function to handle login
-export async function login(obj) {
-  try {
-    const response = await axios.post(`${baseUrl}/login`, obj);
-    return response.data.success;
-  } catch (error) {
-    console.error("Login error:", error);
-    return false;
-  }
+// Function to retrieve the token from storage or any method you are using to store it
+function getToken() {
+  return localStorage.getItem("token");
 }
 
-// Function to get employees
-export function getEmployees() {
-  return axios.get(`${baseUrl}/employees/get-employees`);
-}
+// Create an Axios instance with default headers
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: `${getToken()}`,
+  },
+});
 
-// Function to get count of assigned employees
-export function assignedEmployees() {
-  return axios.get(`${baseUrl}/employees/assigned-count`);
-}
+const API = {
+  login: (credentials) => axios.post(`${BASE_URL}/login`, credentials),
 
-// Function to upload a document
-export async function uploadDocument(file) {
-  try {
-    const response = await axios.post(`${remoteUrl}/upload`, file);
-    return response;
-  } catch (error) {
-    console.error("Upload error:", error);
-    throw error;
-  }
-}
+  getEmployees: (headers) =>
+    axiosInstance.get(`/protected/employees/get-employees`, { headers }),
 
-export async function getProjectTaskStatus(){
-  try{
-    const response = await axios.get(`${baseUrl}/tasks/get-task-status`)
-    return response;
-  }
-  catch(error){
-    console.error(" Can't get projects"+error);
-    throw error;
-  }
-}
+  assignedEmployees: (headers) =>
+    axiosInstance.get(`/protected/employees/assigned-count`, { headers }),
 
-// Exporting API object with all the calls
-export const API = {
-  login: (obj) => login(obj),
-  getEmployees: () => getEmployees(),
-  assignedEmployees: () => assignedEmployees(),
-  sendDocument: (file) => uploadDocument(file),
-  getProjectTaskStatus: () => getProjectTaskStatus()  
+  uploadDocument: (file, headers) =>
+    axiosInstance.post(`${REMOTE_URL}/upload`, file, { headers }),
+
+  getProjectTaskStatus: (headers) =>
+    axiosInstance.get(`/protected/tasks/get-task-status`, { headers }),
 };
+
+export default API;

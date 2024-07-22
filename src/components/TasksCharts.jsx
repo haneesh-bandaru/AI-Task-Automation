@@ -14,7 +14,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { getProjectTaskStatus } from "@/services/Api";
+import API from "@/services/Api";
 
 const chartConfig = {
   completed: {
@@ -34,7 +34,7 @@ const TasksCharts = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getProjectTaskStatus();
+        const response = await API.getProjectTaskStatus();
         const formattedData = response.data.map((project) => ({
           project: project.project_name,
           completed: project.completed_count,

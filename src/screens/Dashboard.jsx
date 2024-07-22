@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import EmployeeChart from "@/components/EmployeeChart";
 import TasksCharts from "@/components/TasksCharts";
 
@@ -13,13 +13,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { getEmployees } from "@/services/Api";
+import API from "@/services/Api";
 
 const Dashboard = () => {
   const [employeeData, setEmployeeData] = useState([]);
 
   useEffect(() => {
-    getEmployees()
+    API.getEmployees()
       .then((response) => {
         setEmployeeData(response.data);
       })

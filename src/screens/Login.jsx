@@ -9,9 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/services/Api";
-import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import API from "@/services/Api";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -21,12 +20,14 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
-    const result = await login(data);
-    if (result) {
+    try {
+      const response = await API.login(data);
+      console.log(response.data);
+      localStorage.setItem("token", response.data.token);
       setIsLoggedIn(true);
       navigate("/dashboard");
-    } else {
-      window.alert("check credentials");
+    } catch (error) {
+      console.log(error);
     }
   };
 
