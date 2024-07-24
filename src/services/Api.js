@@ -28,6 +28,8 @@ const API = {
 
   getProjectTaskStatus: (headers) =>
     axiosInstance.get(`/protected/tasks/get-task-status`, { headers }),
+
+  sendTasks: (obj) => axios.post(`${REMOTE_URL}/receiveJSONdata`, { obj }),
 };
 
 export default API;

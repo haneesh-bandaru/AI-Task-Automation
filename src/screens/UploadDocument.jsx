@@ -17,18 +17,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { FileCheck } from "lucide-react";
 
 const UploadDocument = () => {
   const [formResponse, setFormResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const { toast } = useToast();
+  const [tasks, setTasks] = useState([]);
+  const [otherStatus, setOtherStatus] = useState([]);
+
   const { register, handleSubmit } = useForm({
     defaultValues: {
       file: null,
     },
   });
-
-  const [tasks, setTasks] = useState([]);
 
   const onSubmit = async (data) => {
     try {
@@ -38,6 +43,13 @@ const UploadDocument = () => {
       const response = await API.uploadedDocument(formData);
       setFormResponse(response.data);
       setTasks(response.data.Tasks);
+      setOtherStatus([
+        {
+          "Tech Stack of the project": response.data["Tech Stack of the project"],
+        },
+        { "Number of tasks": response.data["Number of tasks"] },
+        { "Name of the project": response.data["Name of the project"] }
+      ]);
       setLoaded(true);
       setIsLoading(false);
     } catch (error) {
@@ -54,24 +66,22 @@ const UploadDocument = () => {
 
   const SaveChanges = async () => {
     try {
-      // await API.assignTasks(tasks);
-      console.log(tasks);
+      await API.sendTasks(tasks);
       console.log("Changes saved successfully");
     } catch (error) {
       console.error("Error saving changes:", error);
     }
   };
 
-  // Edit
-  // const AssignTasks = async () => {
-  //   try {
-  //     // await API.assignTasks(tasks);
-  //     console.log(tasks);
-  //     console.log("Changes saved successfully");
-  //   } catch (error) {
-  //     console.error("Error saving changes:", error);
-  //   }
-  // };
+  const AssignTasks = async () => {
+    try {
+      console.log([...otherStatus, ...tasks]);
+      await API.sendTasks([...otherStatus, ...tasks]);
+      console.log("Tasks assigned successfully");
+    } catch (error) {
+      console.error("Error assigning tasks:", error);
+    }
+  };
 
   return (
     <div className="mx-auto p-4">
@@ -105,6 +115,8 @@ const UploadDocument = () => {
       )}
       {!isLoading && formResponse && (
         <div className="mb-2">
+          <Toaster />
+
           <h2 className="text-2xl mb-2">Project Report</h2>
           <Card>
             <Table className="table-auto w-full border-collapse border border-gray-200">
@@ -175,7 +187,7 @@ const UploadDocument = () => {
             </Table>
           </Card>
           <h2 className="text-2xl mt-4 mb-2">Task Details</h2>
-          <Card className="max-h-[55vh] overflow-scroll">
+          <Card className="max-h-[55vh]  overflow-scroll">
             <Table className="overflow-scroll ">
               <TableHeader>
                 <TableRow className="items-center">
@@ -256,10 +268,23 @@ const UploadDocument = () => {
               Regenerate
             </Button>
             <div className="flex gap-4">
-              <Button className="bg-secondary text-primary hover:bg-secondary/90">
+              <Button
+                className="bg-secondary text-primary hover:bg-secondary/90"
+                onClick={() => {
+                  toast({
+                    variant: "success",
+                    title: (
+                      <p className="flex items-center  text-black">
+                        <FileCheck />
+                        Changes saved successfully
+                      </p>
+                    ),
+                  });
+                }}
+              >
                 Save Changes
               </Button>
-              <Button onClick={SaveChanges}> Assign Tasks</Button>
+              <Button onClick={AssignTasks}> Assign Tasks</Button>
             </div>
           </div>
         </div>
