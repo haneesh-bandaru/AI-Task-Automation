@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="flex">
       <Routes>
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/login" index element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         {isLoggedIn ? (
           <Route path="/" element={<Layout onLogout={handleLogout} />}>
             <Route path="/dashboard" element={<Dashboard />} />

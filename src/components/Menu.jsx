@@ -1,9 +1,19 @@
 import { Separator } from "./ui/separator";
 import { useNavigate } from "react-router-dom";
-import { CloudUpload, FileText, LayoutDashboard, LogOut, UserPlus } from "lucide-react";
+import {
+  CloudUpload,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  UserPlus,
+} from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Menu = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -13,26 +23,26 @@ const Menu = ({ onLogout }) => {
     {
       displayName: "Dashboard",
       routeName: "/dashboard",
-      iconName: <LayoutDashboard />
+      iconName: <LayoutDashboard />,
     },
     {
       displayName: "Upload Document",
       routeName: "/upload-document",
-      iconName: <CloudUpload />
+      iconName: <CloudUpload />,
     },
     {
       displayName: "Project Reports",
       routeName: "/report",
-      iconName: <FileText />
+      iconName: <FileText />,
     },
     {
       displayName: "Assigned Tasks",
       routeName: "/assign-tasks",
-      iconName: <UserPlus />
-    }
+      iconName: <UserPlus />,
+    },
   ];
 
-  const handleItemClick = routeName => {
+  const handleItemClick = (routeName) => {
     navigate(routeName);
   };
 

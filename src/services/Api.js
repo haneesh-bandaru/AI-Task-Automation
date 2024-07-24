@@ -23,7 +23,7 @@ const API = {
   assignedEmployees: (headers) =>
     axiosInstance.get(`/protected/employees/assigned-count`, { headers }),
 
-  uploadDocument: (file, headers) =>
+  uploadedDocument: (file, headers) =>
     axiosInstance.post(`${REMOTE_URL}/upload`, file, { headers }),
 
   getProjectTaskStatus: (headers) =>

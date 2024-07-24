@@ -93,7 +93,7 @@ const EmployeeChart = () => {
       {loading ? (
         <SkeletonComponent />
       ) : (
-        <Card className="flex flex-col h-[300px] w-[300px]">
+        <Card className="flex flex-col h-[250px] w-[300px]">
           <CardHeader className="items-center pb-0">
             <CardTitle>Status of the Employees</CardTitle>
             {/* <CardDescription>Number of employees assigned and not assigned</CardDescription> */}
@@ -101,7 +101,7 @@ const EmployeeChart = () => {
           <CardContent className="flex-1 pb-0">
             <ChartContainer
               config={chartConfig}
-              className="mx-auto aspect-square max-h-[250px]"
+              className="mx-auto aspect-square max-h-[220px]"
             >
               <PieChart>
                 <ChartTooltip
