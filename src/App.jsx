@@ -7,7 +7,6 @@ import TaskScreen from "./screens/Task";
 import Login from "./screens/Login";
 import { useEffect, useState } from "react";
 
-
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -39,6 +38,7 @@ function App() {
         ) : (
           <Route path="*" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         )}
+        <Route path="*" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>
     </div>
   );

@@ -119,7 +119,7 @@ const UploadDocument = () => {
 
           <h2 className="text-2xl mb-2">Project Report</h2>
           <Card>
-            <Table className="table-auto w-full border-collapse border border-gray-200">
+            <Table className="table-auto w-full border-collapse border  border-gray-200">
               <TableHeader>
                 <TableRow>
                   <TableHead className="border border-gray-200 px-4 py-2">

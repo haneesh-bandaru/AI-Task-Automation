@@ -8,28 +8,35 @@ function getToken() {
 }
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    Authorization: `${getToken()}`,
-  },
+  baseURL: BASE_URL
 });
 
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
+
 const API = {
-  login: (credentials) => axios.post(`${BASE_URL}/login`, credentials),
+  login: credentials => axios.post(`${BASE_URL}/login`, credentials),
 
-  getEmployees: (headers) =>
-    axiosInstance.get(`/protected/employees/get-employees`, { headers }),
+  getEmployees: headers => axiosInstance.get(`/protected/employees/get-employees`, { headers }),
 
-  assignedEmployees: (headers) =>
+  assignedEmployees: headers =>
     axiosInstance.get(`/protected/employees/assigned-count`, { headers }),
 
   uploadedDocument: (file, headers) =>
     axiosInstance.post(`${REMOTE_URL}/upload`, file, { headers }),
 
-  getProjectTaskStatus: (headers) =>
+  getProjectTaskStatus: headers =>
     axiosInstance.get(`/protected/tasks/get-task-status`, { headers }),
 
-  sendTasks: (obj) => axios.post(`${REMOTE_URL}/receiveJSONdata`, { obj }),
+  sendTasks: obj => axios.post(`${REMOTE_URL}/receiveJSONdata`, { obj })
 };
 
 export default API;
